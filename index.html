@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram 2024 - Clone Responsivo</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        /* ================================================= */
+        /* == ESTILOS GLOBALES Y VARIABLES ================== */
+        /* ================================================= */
+        :root {
+            --ig-primary-text: #262626;
+            --ig-secondary-text: #737373;
+            --ig-border: #dbdbdb;
+            --ig-background: #fafafa;
+            --ig-blue: #0095f6;
+            --ig-red: #ed4956;
+            --ig-stories-border: #c13584; /* Color simulado de historias */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--ig-background);
+            color: var(--ig-primary-text);
+            padding-top: 54px; /* Espacio para el header fijo */
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* ================================================= */
+        /* == HEADER / BARRA SUPERIOR ====================== */
+        /* ================================================= */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 54px;
+            background-color: #fff;
+            border-bottom: 1px solid var(--ig-border);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-content {
+            width: 100%;
+            max-width: 935px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Billabong', cursive; /* Simulación */
+            font-size: 28px;
+            font-weight: 400;
+        }
+
+        .nav-icons span {
+            font-size: 24px;
+            margin-left: 22px;
+            cursor: pointer;
+            color: var(--ig-primary-text);
+        }
+        
+        /* Ocultar elementos en móvil para un diseño limpio */
+        @media (max-width: 768px) {
+            .nav-search, .nav-icons span:not(:first-child) {
+                display: none;
+            }
+        }
+        
+        /* ================================================= */
+        /* == LAYOUT PRINCIPAL Y RESPONSIVIDAD ============= */
+        /* ================================================= */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .feed-container {
+            width: 100%;
+            max-width: 614px;
+        }
+        
+        /* SIDEBAR (Sugerencias) */
+        .sidebar {
+            width: 293px;
+            margin-left: 28px;
+            position: sticky;
+            top: 74px;
+            height: 100vh; /* Para que el sticky funcione bien */
+            padding-top: 10px;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none;
+            }
+        }
+
+        /* ================================================= */
+        /* == SECCIÓN DE HISTORIAS (STORIES) ================ */
+        /* ================================================= */
+        .stories-bar {
+            background-color: #fff;
+            border: 1px solid var(--ig-border);
+            padding: 16px 0;
+            margin-bottom: 20px;
+            white-space: nowrap;
+            overflow-x: scroll;
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .stories-bar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .story-item {
+            display: inline-block;
+            text-align: center;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        
+        .story-avatar-wrapper {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Simular el gradiente de borde */
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+            padding: 2px;
+            margin-bottom: 4px;
+        }
+        
+        .story-avatar {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background-color: #fff;
+            padding: 2px; /* Borde interior blanco */
+        }
+        
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .story-username {
+            font-size: 12px;
+            color: var(--ig-primary-text);
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* ================================================= */
+        /* == ESTILO DE LA PUBLICACIÓN (POST) ============== */
+        /* ================================================= */
+        .post {
+            background-color: #fff;
+            border: 1px solid var(--ig-border);
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .post-location {
+            font-size: 12px;
+            color: var(--ig-secondary-text);
+            line-height: 1.2;
+        }
+        
+        .post-menu {
+            margin-left: auto;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* ================================================= */
+        /* == CARRUSEL DE IMÁGENES ======================== */
+        /* ================================================= */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* Proporción 1:1 */
+            overflow: hidden;
+            background-color: black;
+        }
+
+        .carousel-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .carousel-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+            font-size: 30px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .carousel-nav-btn:hover {
+            opacity: 1;
+        }
+
+        .prev-btn { left: 5px; }
+        .next-btn { right: 5px; }
+        .hidden { display: none !important; }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+        }
+
+        .indicator {
+            height: 6px;
+            width: 6px;
+            margin: 0 3px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .indicator.active {
+            background-color: var(--ig-blue);
+        }
+
+        /* ================================================= */
+        /* == POST FOOTER Y ACCIONES ======================= */
+        /* ================================================= */
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 16px 4px;
+        }
+
+        .post-actions .left-icons span {
+            font-size: 26px;
+            margin-right: 14px;
+            cursor: pointer;
+            vertical-align: middle;
+            transition: transform 0.1s;
+        }
+
+        .post-actions .left-icons span:hover {
+            opacity: 0.7;
+        }
+
+        .post-actions .right-icon {
+            font-size: 26px;
+            cursor: pointer;
+        }
+        
+        .post-actions .like-btn.liked {
+            color: var(--ig-red);
+            font-variation-settings: 'FILL' 1; /* Rellena el ícono */
+        }
+        
+        .post-details {
+            padding: 0 16px 16px;
+            font-size: 14px;
+        }
+
+        .post-likes {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .post-caption {
+            line-height: 1.5;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .post-caption strong {
+            font-weight: 600;
+        }
+
+        .post-time {
+            color: var(--ig-secondary-text);
+            font-size: 10px;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+        
+        .post-add-comment {
+            border-top: 1px solid var(--ig-border);
+            padding: 10px 16px;
+            display: flex;
+        }
+        
+        .post-add-comment input {
+            border: none;
+            flex-grow: 1;
+            font-size: 14px;
+            color: var(--ig-secondary-text);
+        }
+        
+        .post-add-comment button {
+            color: var(--ig-blue);
+            font-weight: 600;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Instagram</div>
+            <div class="nav-search">
+                </div>
+            <div class="nav-icons">
+                <span class="material-icons-outlined">home</span>
+                <span class="material-icons-outlined">send</span>
+                <span class="material-icons-outlined">add_box</span>
+                <span class="material-icons-outlined">explore</span>
+                <span class="material-icons-outlined">favorite_border</span>
+                <span class="material-icons-outlined">account_circle</span> 
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="feed-container">
+            
+            <div class="stories-bar">
+                <div class="story-item">
+                    <div class="story-avatar-wrapper">
+                        <div class="story-avatar">
+                            <img src="https://via.placeholder.com/62x62/5E4FA8/FFFFFF?text=Tu" alt="Tu Historia">
+                        </div>
+                    </div>
+                    <div class="story-username">Tu historia</div>
+                </div>
+                <div class="story-item">
+                    <div class="story-avatar-wrapper">
+                        <div class="story-avatar">
+                            <img src="https://via.placeholder.com/62x62/FF6F61/FFFFFF?text=A" alt="Usuario A">
+                        </div>
+                    </div>
+                    <div class="story-username">usuario_a</div>
+                </div>
+                <div class="story-item">
+                    <div class="story-avatar-wrapper">
+                        <div class="story-avatar">
+                            <img src="https://via.placeholder.com/62x62/6B5B95/FFFFFF?text=B" alt="Usuario B">
+                        </div>
+                    </div>
+                    <div class="story-username">usuario_b_largo</div>
+                </div>
+                <div class="story-item">
+                    <div class="story-avatar-wrapper">
+                        <div class="story-avatar">
+                            <img src="https://via.placeholder.com/62x62/88B04B/FFFFFF?text=C" alt="Usuario C">
+                        </div>
+                    </div>
+                    <div class="story-username">usuario_c</div>
+                </div>
+                <div class="story-item">
+                    <div class="story-avatar-wrapper">
+                        <div class="story-avatar">
+                            <img src="https://via.placeholder.com/62x62/F7CAC9/FFFFFF?text=D" alt="Usuario D">
+                        </div>
+                    </div>
+                    <div class="story-username">usuario_d</div>
+                </div>
+                </div>
+            
+            <article class="post" id="post-1">
+                <div class="post-header">
+                    <div class="post-avatar"><img src="https://via.placeholder.com/32x32/FFC300/FFFFFF?text=U1" alt="Avatar"></div>
+                    <div>
+                        <span class="post-username">nature_lover</span>
+                        <div class="post-location">Alpes Suizos</div>
+                    </div>
+                    <span class="material-icons-outlined post-menu">more_horiz</span>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel-track" data-post-id="post-1">
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/4CAF50/FFFFFF?text=Post+1+Imagen+1" alt="P1 I1"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/8BC34A/FFFFFF?text=Post+1+Imagen+2" alt="P1 I2"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/CDDC39/000000?text=Post+1+Imagen+3" alt="P1 I3"></div>
+                    </div>
+                    <button class="carousel-nav-btn prev-btn hidden" data-post-id="post-1" data-direction="prev"><span class="material-icons-outlined">chevron_left</span></button>
+                    <button class="carousel-nav-btn next-btn" data-post-id="post-1" data-direction="next"><span class="material-icons-outlined">chevron_right</span></button>
+                    <div class="carousel-indicators"></div>
+                </div>
+                <div class="post-actions">
+                    <div class="left-icons">
+                        <span class="material-icons-outlined like-btn" data-post-id="post-1">favorite_border</span>
+                        <span class="material-icons-outlined comment-btn">chat_bubble_outline</span>
+                        <span class="material-icons-outlined share-btn">send</span>
+                    </div>
+                    <span class="material-icons-outlined right-icon">bookmark_border</span>
+                </div>
+                <div class="post-details">
+                    <div class="post-likes"><span class="like-count" data-post-id="post-1">1,234</span> Me gusta</div>
+                    <div class="post-caption"><strong>nature_lover</strong> ¡Increíbles vistas desde la cima! La naturaleza nunca deja de sorprenderme. #montaña #viajes</div>
+                    <div class="post-time">HACE 2 DÍAS</div>
+                </div>
+                <div class="post-add-comment">
+                    <input type="text" placeholder="Añade un comentario..." />
+                    <button>Publicar</button>
+                </div>
+            </article>
+
+            <article class="post" id="post-2">
+                <div class="post-header">
+                    <div class="post-avatar"><img src="https://via.placeholder.com/32x32/3F51B5/FFFFFF?text=U2" alt="Avatar"></div>
+                    <div>
+                        <span class="post-username">foodie_deluxe</span>
+                        <div class="post-location">Cafetería Local</div>
+                    </div>
+                    <span class="material-icons-outlined post-menu">more_horiz</span>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel-track" data-post-id="post-2">
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/2196F3/FFFFFF?text=Post+2+Imagen+1" alt="P2 I1"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/03A9F4/FFFFFF?text=Post+2+Imagen+2" alt="P2 I2"></div>
+                    </div>
+                    <button class="carousel-nav-btn prev-btn hidden" data-post-id="post-2" data-direction="prev"><span class="material-icons-outlined">chevron_left</span></button>
+                    <button class="carousel-nav-btn next-btn" data-post-id="post-2" data-direction="next"><span class="material-icons-outlined">chevron_right</span></button>
+                    <div class="carousel-indicators"></div>
+                </div>
+                <div class="post-actions">
+                    <div class="left-icons">
+                        <span class="material-icons-outlined like-btn" data-post-id="post-2">favorite_border</span>
+                        <span class="material-icons-outlined comment-btn">chat_bubble_outline</span>
+                        <span class="material-icons-outlined share-btn">send</span>
+                    </div>
+                    <span class="material-icons-outlined right-icon">bookmark_border</span>
+                </div>
+                <div class="post-details">
+                    <div class="post-likes"><span class="like-count" data-post-id="post-2">987</span> Me gusta</div>
+                    <div class="post-caption"><strong>foodie_deluxe</strong> El mejor café de la ciudad y estos cruasanes... ¡una locura! 🥐☕️ #foodie #cafe</div>
+                    <div class="post-time">HACE 5 HORAS</div>
+                </div>
+                <div class="post-add-comment">
+                    <input type="text" placeholder="Añade un comentario..." />
+                    <button>Publicar</button>
+                </div>
+            </article>
+            
+            <article class="post" id="post-3">
+                <div class="post-header">
+                    <div class="post-avatar"><img src="https://via.placeholder.com/32x32/E91E63/FFFFFF?text=U3" alt="Avatar"></div>
+                    <div>
+                        <span class="post-username">tech_guru</span>
+                    </div>
+                    <span class="material-icons-outlined post-menu">more_horiz</span>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel-track" data-post-id="post-3">
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/9C27B0/FFFFFF?text=Post+3+Imagen+1" alt="P3 I1"></div>
+                    </div>
+                    <button class="carousel-nav-btn prev-btn hidden" data-post-id="post-3" data-direction="prev"><span class="material-icons-outlined">chevron_left</span></button>
+                    <button class="carousel-nav-btn next-btn hidden" data-post-id="post-3" data-direction="next"><span class="material-icons-outlined">chevron_right</span></button>
+                    <div class="carousel-indicators"></div>
+                </div>
+                <div class="post-actions">
+                    <div class="left-icons">
+                        <span class="material-icons-outlined like-btn" data-post-id="post-3">favorite_border</span>
+                        <span class="material-icons-outlined comment-btn">chat_bubble_outline</span>
+                        <span class="material-icons-outlined share-btn">send</span>
+                    </div>
+                    <span class="material-icons-outlined right-icon">bookmark_border</span>
+                </div>
+                <div class="post-details">
+                    <div class="post-likes"><span class="like-count" data-post-id="post-3">5,432</span> Me gusta</div>
+                    <div class="post-caption"><strong>tech_guru</strong> Probando el nuevo setup de programación. ¡La productividad se dispara! 💻 #coding #tech #setup</div>
+                    <div class="post-time">HACE 1 DÍA</div>
+                </div>
+                <div class="post-add-comment">
+                    <input type="text" placeholder="Añade un comentario..." />
+                    <button>Publicar</button>
+                </div>
+            </article>
+            
+            <article class="post" id="post-4">
+                <div class="post-header">
+                    <div class="post-avatar"><img src="https://via.placeholder.com/32x32/FF9800/FFFFFF?text=U4" alt="Avatar"></div>
+                    <div>
+                        <span class="post-username">travel_junkie</span>
+                        <div class="post-location">Tokyo, Japón</div>
+                    </div>
+                    <span class="material-icons-outlined post-menu">more_horiz</span>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel-track" data-post-id="post-4">
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/FFC107/000000?text=Post+4+Imagen+1" alt="P4 I1"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/FFEB3B/000000?text=Post+4+Imagen+2" alt="P4 I2"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/FFE082/000000?text=Post+4+Imagen+3" alt="P4 I3"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/FFB300/FFFFFF?text=Post+4+Imagen+4" alt="P4 I4"></div>
+                    </div>
+                    <button class="carousel-nav-btn prev-btn hidden" data-post-id="post-4" data-direction="prev"><span class="material-icons-outlined">chevron_left</span></button>
+                    <button class="carousel-nav-btn next-btn" data-post-id="post-4" data-direction="next"><span class="material-icons-outlined">chevron_right</span></button>
+                    <div class="carousel-indicators"></div>
+                </div>
+                <div class="post-actions">
+                    <div class="left-icons">
+                        <span class="material-icons-outlined like-btn" data-post-id="post-4">favorite_border</span>
+                        <span class="material-icons-outlined comment-btn">chat_bubble_outline</span>
+                        <span class="material-icons-outlined share-btn">send</span>
+                    </div>
+                    <span class="material-icons-outlined right-icon">bookmark_border</span>
+                </div>
+                <div class="post-details">
+                    <div class="post-likes"><span class="like-count" data-post-id="post-4">7,001</span> Me gusta</div>
+                    <div class="post-caption"><strong>travel_junkie</strong> ¡Las luces de Tokio son irreales! Me encanta esta ciudad. 🏮 #tokyo #travel</div>
+                    <div class="post-time">HACE 15 HORAS</div>
+                </div>
+                <div class="post-add-comment">
+                    <input type="text" placeholder="Añade un comentario..." />
+                    <button>Publicar</button>
+                </div>
+            </article>
+            
+            <article class="post" id="post-5">
+                <div class="post-header">
+                    <div class="post-avatar"><img src="https://via.placeholder.com/32x32/FF4081/FFFFFF?text=U5" alt="Avatar"></div>
+                    <div>
+                        <span class="post-username">artes_modernas</span>
+                    </div>
+                    <span class="material-icons-outlined post-menu">more_horiz</span>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel-track" data-post-id="post-5">
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/F50057/FFFFFF?text=Post+5+Imagen+1" alt="P5 I1"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/FF80AB/FFFFFF?text=Post+5+Imagen+2" alt="P5 I2"></div>
+                    </div>
+                    <button class="carousel-nav-btn prev-btn hidden" data-post-id="post-5" data-direction="prev"><span class="material-icons-outlined">chevron_left</span></button>
+                    <button class="carousel-nav-btn next-btn" data-post-id="post-5" data-direction="next"><span class="material-icons-outlined">chevron_right</span></button>
+                    <div class="carousel-indicators"></div>
+                </div>
+                <div class="post-actions">
+                    <div class="left-icons">
+                        <span class="material-icons-outlined like-btn" data-post-id="post-5">favorite_border</span>
+                        <span class="material-icons-outlined comment-btn">chat_bubble_outline</span>
+                        <span class="material-icons-outlined share-btn">send</span>
+                    </div>
+                    <span class="material-icons-outlined right-icon">bookmark_border</span>
+                </div>
+                <div class="post-details">
+                    <div class="post-likes"><span class="like-count" data-post-id="post-5">2,550</span> Me gusta</div>
+                    <div class="post-caption"><strong>artes_modernas</strong> Inspiración abstracta para hoy. ¿Qué sensación les da? ✨ #arte #abstracto</div>
+                    <div class="post-time">HACE 4 DÍAS</div>
+                </div>
+                <div class="post-add-comment">
+                    <input type="text" placeholder="Añade un comentario..." />
+                    <button>Publicar</button>
+                </div>
+            </article>
+            
+            <article class="post" id="post-6">
+                <div class="post-header">
+                    <div class="post-avatar"><img src="https://via.placeholder.com/32x32/607D8B/FFFFFF?text=U6" alt="Avatar"></div>
+                    <div>
+                        <span class="post-username">deportes_al_dia</span>
+                        <div class="post-location">Gimnasio Urbano</div>
+                    </div>
+                    <span class="material-icons-outlined post-menu">more_horiz</span>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel-track" data-post-id="post-6">
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/9E9E9E/FFFFFF?text=Post+6+Imagen+1" alt="P6 I1"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/607D8B/FFFFFF?text=Post+6+Imagen+2" alt="P6 I2"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/B0BEC5/FFFFFF?text=Post+6+Imagen+3" alt="P6 I3"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/CFD8DC/FFFFFF?text=Post+6+Imagen+4" alt="P6 I4"></div>
+                        <div class="carousel-item"><img src="https://via.placeholder.com/614x614/78909C/FFFFFF?text=Post+6+Imagen+5" alt="P6 I5"></div>
+                    </div>
+                    <button class="carousel-nav-btn prev-btn hidden" data-post-id="post-6" data-direction="prev"><span class="material-icons-outlined">chevron_left</span></button>
+                    <button class="carousel-nav-btn next-btn" data-post-id="post-6" data-direction="next"><span class="material-icons-outlined">chevron_right</span></button>
+                    <div class="carousel-indicators"></div>
+                </div>
+                <div class="post-actions">
+                    <div class="left-icons">
+                        <span class="material-icons-outlined like-btn" data-post-id="post-6">favorite_border</span>
+                        <span class="material-icons-outlined comment-btn">chat_bubble_outline</span>
+                        <span class="material-icons-outlined share-btn">send</span>
+                    </div>
+                    <span class="material-icons-outlined right-icon">bookmark_border</span>
+                </div>
+                <div class="post-details">
+                    <div class="post-likes"><span class="like-count" data-post-id="post-6">899</span> Me gusta</div>
+                    <div class="post-caption"><strong>deportes_al_dia</strong> Rutina de hoy terminada. ¡A darlo todo! 🏋️‍♂️💪 #fitness #gym #entrenamiento</div>
+                    <div class="post-time">HACE 1 HORA</div>
+                </div>
+                <div class="post-add-comment">
+                    <input type="text" placeholder="Añade un comentario..." />
+                    <button>Publicar</button>
+                </div>
+            </article>
+
+        </section>
+
+        <section class="sidebar">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <div class="post-avatar" style="width: 56px; height: 56px;"><img src="https://via.placeholder.com/56x56/5E4FA8/FFFFFF?text=P" alt="Perfil"></div>
+                <div style="margin-left: 10px;">
+                    <div class="post-username" style="font-size: 16px;">tu_perfil</div>
+                    <div style="font-size: 14px; color: var(--ig-secondary-text);">Nombre Completo</div>
+                </div>
+                <a href="#" style="color: var(--ig-blue); font-weight: 600; margin-left: auto; font-size: 12px;">Cambiar</a>
+            </div>
+            
+            <p style="font-size: 14px; color: var(--ig-secondary-text); font-weight: 600; margin-top: 15px;">Sugerencias para ti</p>
+            </section>
+        
+    </main>
+
+    <script>
+        // Función para inicializar un solo carrusel
+        function initCarousel(postId) {
+            const track = document.querySelector(`.carousel-track[data-post-id="${postId}"]`);
+            if (!track) return;
+
+            const items = track.querySelectorAll('.carousel-item');
+            const totalItems = items.length;
+            let currentIndex = 0;
+            const postElement = document.getElementById(postId);
+            const prevBtn = postElement.querySelector('.prev-btn');
+            const nextBtn = postElement.querySelector('.next-btn');
+            const indicatorsContainer = postElement.querySelector('.carousel-indicators');
+
+            // 1. Generar Indicadores
+            function createIndicators() {
+                indicatorsContainer.innerHTML = '';
+                if (totalItems <= 1) {
+                    // Ocultar indicadores y botones si solo hay una imagen
+                    indicatorsContainer.style.display = 'none';
+                    prevBtn.classList.add('hidden');
+                    nextBtn.classList.add('hidden');
+                    return;
+                }
+                indicatorsContainer.style.display = 'flex';
+                
+                for (let i = 0; i < totalItems; i++) {
+                    const indicator = document.createElement('span');
+                    indicator.classList.add('indicator');
+                    if (i === 0) {
+                        indicator.classList.add('active');
+                    }
+                    indicator.dataset.index = i;
+                    indicator.addEventListener('click', () => moveToSlide(i));
+                    indicatorsContainer.appendChild(indicator);
+                }
+            }
+
+            // 2. Mover a Diapositiva
+            function moveToSlide(index) {
+                if (index < 0 || index >= totalItems) return;
+                currentIndex = index;
+                const offset = -currentIndex * 100;
+                track.style.transform = `translateX(${offset}%)`;
+                
+                updateControls();
+                updateIndicators();
+            }
+
+            // 3. Actualizar Botones de Navegación
+            function updateControls() {
+                if (totalItems <= 1) return;
+                
+                // Botón 'Anterior'
+                if (currentIndex === 0) {
+                    prevBtn.classList.add('hidden');
+                } else {
+                    prevBtn.classList.remove('hidden');
+                }
+
+                // Botón 'Siguiente'
+                if (currentIndex === totalItems - 1) {
+                    nextBtn.classList.add('hidden');
+                } else {
+                    nextBtn.classList.remove('hidden');
+                }
+            }
+            
+            // 4. Actualizar Indicadores
+            function updateIndicators() {
+                indicatorsContainer.querySelectorAll('.indicator').forEach((indicator, index) => {
+                    if (index === currentIndex) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                });
+            }
+
+            // 5. Asignar Eventos
+            prevBtn.addEventListener('click', () => moveToSlide(currentIndex - 1));
+            nextBtn.addEventListener('click', () => moveToSlide(currentIndex + 1));
+
+            // Inicializar
+            createIndicators();
+            updateControls();
+        }
+
+        // Función de Interacción (Like)
+        function initLikes(postId) {
+            const likeBtn = document.querySelector(`.like-btn[data-post-id="${postId}"]`);
+            const likeCountElement = document.querySelector(`.like-count[data-post-id="${postId}"]`);
+            
+            if (!likeBtn || !likeCountElement) return;
+
+            let isLiked = false;
+            let currentLikes = parseInt(likeCountElement.textContent.replace(/,/g, ''));
+            
+            // Función para formatear el número (ej: 1234 -> 1,234)
+            const formatLikes = (num) => num.toLocaleString('en-US');
+
+            likeBtn.addEventListener('click', () => {
+                isLiked = !isLiked;
+                
+                if (isLiked) {
+                    likeBtn.classList.remove('material-icons-outlined');
+                    likeBtn.classList.add('material-icons'); // Usa el icono relleno
+                    likeBtn.classList.add('liked');
+                    currentLikes += 1;
+                } else {
+                    likeBtn.classList.remove('material-icons');
+                    likeBtn.classList.remove('liked');
+                    likeBtn.classList.add('material-icons-outlined'); // Usa el icono de contorno
+                    currentLikes -= 1;
+                }
+                
+                likeCountElement.textContent = formatLikes(currentLikes);
+            });
+            
+            // Simular doble clic en la imagen (solo en el primer item visible)
+            const firstCarouselItem = document.getElementById(postId).querySelector('.carousel-item');
+            if (firstCarouselItem) {
+                firstCarouselItem.addEventListener('dblclick', (e) => {
+                    if (!isLiked) { // Simular que solo da like si no lo ha hecho
+                        likeBtn.click();
+                        // Simular animación de corazón
+                        // (Opcional: se podría añadir un icono de corazón que aparezca y desaparezca)
+                    }
+                });
+            }
+            
+            // Simular compartir
+            const shareBtn = document.querySelector(`#${postId} .share-btn`);
+            if (shareBtn) {
+                shareBtn.addEventListener('click', () => {
+                    alert('Compartir la publicación ' + postId + ' (Función simulada)');
+                });
+            }
+
+            // Simular comentar
+            const commentBtn = document.querySelector(`#${postId} .comment-btn`);
+            if (commentBtn) {
+                commentBtn.addEventListener('click', () => {
+                    // Enfocar el input de comentario
+                    const input = document.querySelector(`#${postId} input[type="text"]`);
+                    input.focus();
+                });
+            }
+        }
+
+
+        // Inicializar todos los posts al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lista de todos los IDs de los posts
+            const postIds = ['post-1', 'post-2', 'post-3', 'post-4', 'post-5', 'post-6'];
+            
+            postIds.forEach(id => {
+                initCarousel(id);
+                initLikes(id);
+            });
+        });
+    </script>
+</body>
+</html>
